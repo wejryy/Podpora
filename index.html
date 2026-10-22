@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <title>Technická podpora – VDF Games</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Technická podpora – VDF Games X</h1>
+
+  <p>
+    Jak ti můžeme pomoct? Napiš, jaký máš problém.
+  </p>
+
+  <form id="question-form">
+    <label for="question">Tvůj dotaz:</label><br>
+    <textarea
+      id="question"
+      rows="5"
+      placeholder="Např.: Po poslední aktualizaci se mi hra nespustí..."
+    ></textarea>
+
+    <!-- volitelně, polepro zadání emailu -->
+    <label for="email">E-mail (nepovinné):</label><br>
+    <input
+      type="email"
+      id="email"
+      placeholder="tvuj@email.cz"
+    >
+
+    <button type="submit">Odeslat dotaz</button>
+  </form>
+
+  <h2>Odpověď podpory:</h2>
+  <div id="answer">
+    Zatím žádný dotaz.
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

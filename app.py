@@ -1,7 +1,7 @@
 import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import google.generativeai as genai  # Import knihovny pro Gemini
+import python-gemini-api as genai
 
 app = Flask(__name__)
 

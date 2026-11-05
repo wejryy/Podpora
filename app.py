@@ -1,11 +1,15 @@
 import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import google.generativeai as genai  # Import knihovny pro Gemini
 
 app = Flask(__name__)
 
-# Pro školní projekt povolíme CORS všude (později se dá zpřísnit)
+# Povolení CORS
 CORS(app)
+
+# Načtení Gemini API klíče z proměnných prostředí (Render)
+api_key = os.environ.get("GEMINI_API_KEY")
 
 @app.get("/")
 def home():
@@ -20,10 +24,30 @@ def chat():
     if not message:
         return jsonify({"error": "message is required"}), 400
 
-    # Zatím fake odpověď (fáze BACKEND)
-    reply = f"[DEMO] Přijal jsem dotaz od {student}: {message}"
+    # Kontrola, zda je klíč nastavený v Renderu
+    if not api_key:
+        return jsonify({"error": "API klíč (GEMINI_API_KEY) není na serveru nastaven."}), 500
 
-    return jsonify({"reply": reply})
+    try:
+        # Konfigurace klíče
+        genai.configure(api_key=api_key)
+        
+        # Vytvoření instance modelu včetně systémové instrukce pro kontext
+        model = genai.GenerativeModel(
+            model_name="gemini-3.6-flash",
+            system_instruction=f"Jsi školní podpora (VDF Support). Odpovídáš studentovi jménem {student}. Buď stručný a nápomocný."
+        )
+        
+        # Odeslání dotazu do Gemini
+        response = model.generate_content(message)
+        
+        # Získání textové odpovědi
+        reply = response.text
+        return jsonify({"reply": reply})
+
+    except Exception as e:
+        print(f"Chyba při komunikaci s Gemini API: {e}")
+        return jsonify({"error": "Omlouváme se, podpora je momentálně nedostupná."}), 500
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", "8000"))

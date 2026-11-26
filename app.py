@@ -1,7 +1,8 @@
 import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 
 app = Flask(__name__)
 
@@ -29,17 +30,20 @@ def chat():
         return jsonify({"error": "API klíč (GEMINI_API_KEY) není na serveru nastaven."}), 500
 
     try:
-        # Konfigurace klíče
-        genai.configure(api_key=api_key)
+        # Inicializace klienta s API klíčem
+        client = genai.Client(api_key=api_key)
         
-        # Vytvoření instance modelu včetně systémové instrukce pro kontext
-        model = genai.GenerativeModel(
-            model_name="gemini-4-hydrogen",
-            system_instruction=f"Jsi školní podpora (VDF Support). Odpovídáš studentovi jménem {student}. Buď stručný a nápomocný."
+        # Odeslání dotazu do Gemini 4 Hydrogen včetně systémové instrukce
+        response = client.models.generate_content(
+            model="gemini-4-hydrogen",
+            contents=message,
+            config=types.GenerateContentConfig(
+                system_instruction=f"Jsi školní podpora (VDF Support). Odpovídáš studentovi jménem {student}. Buď stručný a nápomocný.",
+                thinking_config=types.ThinkingConfig(
+                    thinking_level="LOW"
+                )
+            )
         )
-        
-        # Odeslání dotazu do Gemini
-        response = model.generate_content(message)
         
         # Získání textové odpovědi
         reply = response.text

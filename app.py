@@ -35,7 +35,7 @@ def chat():
         
         # Odeslání dotazu do Gemini 4 Hydrogen včetně systémové instrukce
         response = client.models.generate_content(
-            model="gemini-3.8-flash",
+            model="gemini-3.5-flash-lite",
             contents=message,
             config=types.GenerateContentConfig(
                 system_instruction=f"Jsi školní podpora (VDF Support). Odpovídáš studentovi jménem {student}. Buď stručný a nápomocný.",

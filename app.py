@@ -34,7 +34,7 @@ def chat():
         
         # Vytvoření instance modelu včetně systémové instrukce pro kontext
         model = genai.GenerativeModel(
-            model_name="gemini-3.6-flash",
+            model_name="gemini-4-hydrogen",
             system_instruction=f"Jsi školní podpora (VDF Support). Odpovídáš studentovi jménem {student}. Buď stručný a nápomocný."
         )
         
